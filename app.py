@@ -1,17 +1,14 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from transformers import AutoModel, AutoTokenizer
+from transformers import (AutoModel, AutoTokenizer)
 from PIL import Image
-import torch
+import numpy as np
 import time
 
-# Load model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained('ucaslcl/GOT-OCR2_0', trust_remote_code=True)
-model = AutoModel.from_pretrained(
-    'ucaslcl/GOT-OCR2_0', trust_remote_code=True, low_cpu_mem_usage=True, device_map='cuda', 
-    use_safetensors=True, pad_token_id=tokenizer.eos_token_id
-)
-model = model.eval().cuda()
+tokenizer = AutoTokenizer.from_pretrained('srimanth-d/GOT_CPU', trust_remote_code=True)
+model = AutoModel.from_pretrained('srimanth-d/GOT_CPU', trust_remote_code=True, low_cpu_mem_usage=True, use_safetensors=True, pad_token_id=tokenizer.eos_token_id)
+model = model.eval()
+
 
 # Sidebar menu
 with st.sidebar:
@@ -24,7 +21,7 @@ if selected == "Home":
     st.subheader("An Online Optical Character Recognition")
 
     # Function to handle OCR
-    def OCR(image):
+    def OCR():
         uploaded_file = st.file_uploader("Choose an image file", type=["png", "jpg", "jpeg"])
         if uploaded_file is not None:
             # Save uploaded file
@@ -36,20 +33,23 @@ if selected == "Home":
             image = Image.open(uploaded_file)
             st.image(image, caption="Uploaded Image", use_column_width=True)
 
-            # Send image to the OCR model
-            res = model.chat(tokenizer, uploaded_file.name, ocr_type='ocr')
-
-            return res
+            try:
+                # Send image to the OCR model
+                with st.spinner('Processing...'):
+                    res = model.chat(tokenizer, uploaded_file.name, ocr_type='ocr')
+                return res
+            except Exception as e:
+                st.error(f"Error in OCR processing: {e}")
+                return None
 
     # Call the OCR function
-    result = OCR(None)
+    result = OCR()
     
-    with st.spinner('Wait for it...'):
-        time.sleep(5)
     # Display OCR result
     if result:
         st.text_area("OCR Result", result)
-    st.success("Done!")
+    else:
+        st.info("Upload an image to extract text.")
 
 
 # Documents page
@@ -58,3 +58,4 @@ if selected == "Documents":
 
 # Display selected menu item
 selected
+
