@@ -4,3 +4,8 @@ transformers
 Pillow
 numpy
 safetensors
+torch
+torchvision
+tiktoken
+verovio
+accelerate
