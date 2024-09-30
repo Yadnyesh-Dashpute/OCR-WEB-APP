@@ -1,5 +1,3 @@
-import streamlit as st
-from streamlit_option_menu import option_menu
 from transformers import (AutoModel, AutoTokenizer)
 from PIL import Image
 import numpy as np
