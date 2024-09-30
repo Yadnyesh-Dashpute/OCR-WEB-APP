@@ -25,7 +25,7 @@ if selected == "Home":
         uploaded_file = st.file_uploader("Choose an image file", type=["png", "jpg", "jpeg"])
         if uploaded_file is not None:
             # Save uploaded file
-            with open(f"./{uploaded_file.name}", "wb") as f:
+            with open(f"{uploaded_file.name}", "wb") as f:
                 f.write(uploaded_file.getvalue())
             st.success(f"File '{uploaded_file.name}' saved successfully!")
 
