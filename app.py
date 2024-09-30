@@ -1,3 +1,10 @@
+import streamlit as st
+from streamlit_option_menu import option_menu
+from transformers import (AutoModel, AutoTokenizer)
+from PIL import Image
+import numpy as np
+import time
+
 tokenizer = AutoTokenizer.from_pretrained('srimanth-d/GOT_CPU', trust_remote_code=True)
 model = AutoModel.from_pretrained('srimanth-d/GOT_CPU', trust_remote_code=True, low_cpu_mem_usage=True, use_safetensors=True, pad_token_id=tokenizer.eos_token_id)
 model = model.eval()
